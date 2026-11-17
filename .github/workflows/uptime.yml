@@ -1,0 +1,22 @@
+name: Website Uptime Check
+
+on:
+  # Allows you to run the workflow manually from the Actions tab
+  workflow_dispatch:
+  # Runs automatically every 30 minutes
+  schedule:
+    - cron: '*/30 * * * *'
+
+jobs:
+  check-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping target website
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://example.com)
+          echo "HTTP Status Code: $STATUS"
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Alert: Site is down or unreachable!"
+            exit 1
+          fi
+          echo "Site is healthy."
